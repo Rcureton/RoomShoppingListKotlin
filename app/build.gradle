@@ -48,6 +48,7 @@ dependencies {
     compile "android.arch.lifecycle:runtime:${arch_persistence}"
     compile "android.arch.lifecycle:extensions:${arch_persistence}"
     compile "com.google.dagger:dagger:${dagger_version}"
+    compile "android.arch.persistence.room:rxjava2:${arch_persistence}"
     annotationProcessor "com.google.dagger:dagger-compiler:${dagger_version}"
     annotationProcessor "android.arch.lifecycle:compiler:${arch_persistence}"
     annotationProcessor "android.arch.persistence.room:compiler:${arch_persistence}"

@@ -1,12 +1,12 @@
 package com.bignerdranch.android.roomshoppinglistkotlin.database
 
-import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
+import io.reactivex.Flowable
 
 @Dao interface ShoppingItemsDao {
 
     @Query("select * from shoppingItem")
-    fun getAllItems(): LiveData<List<ShoppingItems>>
+    fun getAllItems(): Flowable<List<ShoppingItems>>
 
     @Update
     fun updateItem(shoppingItems: ShoppingItems)
