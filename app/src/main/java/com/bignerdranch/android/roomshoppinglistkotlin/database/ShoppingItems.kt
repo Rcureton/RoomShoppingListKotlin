@@ -10,6 +10,8 @@ import java.util.*
 @TypeConverters(DateConverter::class)
 data class ShoppingItems (
         @PrimaryKey(autoGenerate = true) val id: Int, @ColumnInfo(name = "date") var date: Date,
-        @ColumnInfo(name = "item") var item: String, @ColumnInfo(name = "store") var store: String)
+        @ColumnInfo(name = "item") var item: String, @ColumnInfo(name = "store") var store: String) {
+
+}
 
 
