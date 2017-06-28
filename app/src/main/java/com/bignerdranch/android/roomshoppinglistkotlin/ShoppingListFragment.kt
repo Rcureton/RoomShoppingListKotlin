@@ -18,7 +18,7 @@ class ShoppingListFragment : LifecycleFragment() {
 
 
     private lateinit var binding: FragmentShoppingListBinding
-    private lateinit var mShoppingItems: MutableList<ShoppingItems>
+    private var mShoppingItems = mutableListOf<ShoppingItems>()
     private lateinit var mViewModel: ShoppingListViewModel
     private lateinit var mAdapter: ShoppingListAdapter
 
@@ -40,10 +40,10 @@ class ShoppingListFragment : LifecycleFragment() {
         binding.shoppingListRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         mViewModel = ViewModelProviders.of(this).get(ShoppingListViewModel::class.java)
-        val adapter = ShoppingListAdapter(mShoppingItems)
-        mViewModel.getItems().observeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe { listOfItems ->
-            adapter.setItems(listOfItems)
-        }
+//        val adapter = ShoppingListAdapter(mShoppingItems)
+//        mViewModel.getItems().observeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe { listOfItems ->
+//            adapter.setItems(listOfItems)
+//        }
 
         return binding.root
     }
@@ -70,7 +70,8 @@ class ShoppingListFragment : LifecycleFragment() {
 
         override fun onClick(v: View?) {
             if (v == listBinding.listItemDeleteButton) {
-                mViewModel.deleteItem(shoppingItem)
+                mViewModel.deleteItem(shoppingItem)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
+
             } else {
                 val intent = Intent(context, ShoppingItemActivity::class.java)
                 startActivity(intent)

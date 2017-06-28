@@ -6,38 +6,27 @@ import com.bignerdranch.android.roomshoppinglistkotlin.database.AppDatabase
 import com.bignerdranch.android.roomshoppinglistkotlin.database.ShoppingItems
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 
-class ShoppingListViewModel(application: Application?): AndroidViewModel(application) {
+class ShoppingListViewModel : AndroidViewModel {
 
-    private var mDatabase: AppDatabase? = null
-    private var mShoppingItems: Flowable<List<ShoppingItems>> = null!!
-    val compositeDisposable = CompositeDisposable()
-
-    init {
+    constructor(application: Application?): super(application){
         mDatabase = AppDatabase.getDatabase(this.getApplication())
-        mShoppingItems = mDatabase?.shoppingItemsDao()!!.getAllItems()
+
     }
 
-    fun addItem(shoppingItems: ShoppingItems) {
-        compositeDisposable.add(Observable.fromCallable {mDatabase?.shoppingItemsDao()?.insertItems(shoppingItems)}
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
+    private var mDatabase: AppDatabase? = null
+
+    fun addItem(shoppingItems: ShoppingItems): Unit? {
+        return mDatabase?.shoppingItemsDao()?.insertItems(shoppingItems)
     }
 
     fun getItems(): Flowable<List<ShoppingItems>> {
-        return mShoppingItems
+        return mDatabase?.shoppingItemsDao()!!.getAllItems()
     }
 
-    fun deleteItem(shoppingItems: ShoppingItems) {
-        compositeDisposable.delete(Observable.fromCallable { mDatabase?.shoppingItemsDao()?.deleteItem(shoppingItems)}
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
+    fun deleteItem(shoppingItems: ShoppingItems): Observable<Unit?>? {
+        return Observable.fromCallable { mDatabase?.shoppingItemsDao()?.deleteItem(shoppingItems) }
     }
 
 }
