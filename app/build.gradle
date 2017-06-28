@@ -43,14 +43,15 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.8'
     compile "android.arch.persistence.room:runtime:${arch_persistence}"
+    kapt "android.arch.persistence.room:runtime:${arch_persistence}"
     compile "android.arch.persistence.room:rxjava2:${arch_persistence}"
     compile "android.arch.lifecycle:runtime:${arch_persistence}"
     compile "android.arch.lifecycle:extensions:${arch_persistence}"
     compile "com.google.dagger:dagger:${dagger_version}"
-    compile "android.arch.persistence.room:rxjava2:${arch_persistence}"
-    compile "com.google.dagger:dagger-compiler:${dagger_version}"
-    compile "android.arch.lifecycle:compiler:${arch_persistence}"
-    compile "android.arch.persistence.room:compiler:${arch_persistence}"
+    annotationProcessor "com.google.dagger:dagger-compiler:${dagger_version}"
+    annotationProcessor "android.arch.lifecycle:compiler:${arch_persistence}"
+//    kapt "android.arch.persistence.room:compiler:${arch_persistence}"
+    annotationProcessor "android.arch.persistence.room:compiler:${arch_persistence}"
     kapt 'com.android.databinding:compiler:3.0.0-alpha4'
 
 }

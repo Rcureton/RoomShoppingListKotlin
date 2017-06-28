@@ -1,7 +1,6 @@
 package com.bignerdranch.android.roomshoppinglistkotlin
 
 import android.arch.lifecycle.LifecycleFragment
-import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,15 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import com.bignerdranch.android.roomshoppinglistkotlin.database.ShoppingItems
 import com.bignerdranch.android.roomshoppinglistkotlin.databinding.FragmentShoppingItemBinding
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 
 class ShoppingItemFragment : LifecycleFragment() {
 
     private lateinit var binding: FragmentShoppingItemBinding
-    private var mViewModel: ShoppingListViewModel = null!!
-    private var mDate: Date
-    private var mItemTitle: String
-    private var mStoreName: String
+    private lateinit var mDate: Date
+    private lateinit var mItemTitle: String
+    private lateinit var mStoreName: String
+
+//    private var mViewModel: ShoppingListViewModel = null!!
 
 
     companion object {
@@ -29,7 +32,7 @@ class ShoppingItemFragment : LifecycleFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mViewModel = ViewModelProviders.of(this).get(ShoppingListViewModel::class.java)
+//        mViewModel = ViewModelProviders.of(this).get(ShoppingListViewModel::class.java)
 
     }
 
@@ -47,9 +50,12 @@ class ShoppingItemFragment : LifecycleFragment() {
 
         binding.fragmentShoppingSaveButton.setOnClickListener { v ->
             val shoppingItem = ShoppingItems(UUID.randomUUID().hashCode(), mDate, mStoreName, mItemTitle)
-            mViewModel.addItem(shoppingItem)
 
-        }
+            Observable.fromCallable {
+                ShoppingListApplication.mAppDatabase?.shoppingItemsDao()?.insertItems(shoppingItem)}
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe()
+            }
 
         return binding.root
     }

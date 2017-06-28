@@ -17,8 +17,8 @@ class ShoppingListViewModel : AndroidViewModel {
 
     private var mDatabase: AppDatabase? = null
 
-    fun addItem(shoppingItems: ShoppingItems): Unit? {
-        return mDatabase?.shoppingItemsDao()?.insertItems(shoppingItems)
+    fun addItem(shoppingItems: ShoppingItems): Observable<Unit>? {
+        return Observable.fromCallable { mDatabase?.shoppingItemsDao()?.insertItems(shoppingItems) }
     }
 
     fun getItems(): Flowable<List<ShoppingItems>> {

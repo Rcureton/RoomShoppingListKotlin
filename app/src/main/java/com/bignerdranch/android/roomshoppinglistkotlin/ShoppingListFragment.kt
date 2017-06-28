@@ -1,7 +1,6 @@
 package com.bignerdranch.android.roomshoppinglistkotlin
 
 import android.arch.lifecycle.LifecycleFragment
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -39,8 +38,14 @@ class ShoppingListFragment : LifecycleFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_shopping_list, container, false)
         binding.shoppingListRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-        mViewModel = ViewModelProviders.of(this).get(ShoppingListViewModel::class.java)
-//        val adapter = ShoppingListAdapter(mShoppingItems)
+//        mViewModel = ViewModelProviders.of(this).get(ShoppingListViewModel::class.java)
+        val adapter = ShoppingListAdapter(mShoppingItems)
+        ShoppingListApplication.mAppDatabase?.shoppingItemsDao()?.getAllItems()?.
+                observeOn(Schedulers.io())
+                ?.subscribeOn(AndroidSchedulers.mainThread())
+                ?.subscribe {
+                    list -> adapter.setItems(list)
+                }
 //        mViewModel.getItems().observeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe { listOfItems ->
 //            adapter.setItems(listOfItems)
 //        }
@@ -65,12 +70,12 @@ class ShoppingListFragment : LifecycleFragment() {
 
 
     inner class ShoppingListItemHolder(binding: ListShoppingItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
-        private var listBinding: ListShoppingItemBinding = null!!
-        private var shoppingItem: ShoppingItems
+        private lateinit var listBinding: ListShoppingItemBinding
+        private var shoppingItem: ShoppingItems = null!!
 
         override fun onClick(v: View?) {
             if (v == listBinding.listItemDeleteButton) {
-                mViewModel.deleteItem(shoppingItem)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
+//                mViewModel.deleteItem(shoppingItem)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
 
             } else {
                 val intent = Intent(context, ShoppingItemActivity::class.java)
@@ -87,8 +92,8 @@ class ShoppingListFragment : LifecycleFragment() {
     }
 
     inner class ShoppingListAdapter(shoppingItems: MutableList<ShoppingItems>) : RecyclerView.Adapter<ShoppingListItemHolder>() {
-        private var binding: ListShoppingItemBinding = null!!
-        private var items: MutableList<ShoppingItems> = null!!
+        private lateinit var binding: ListShoppingItemBinding
+        private var items = mutableListOf<ShoppingItems>()
 
         override fun onBindViewHolder(parent: ShoppingListItemHolder?, i: Int) {
             val shoppingItem = items[i]

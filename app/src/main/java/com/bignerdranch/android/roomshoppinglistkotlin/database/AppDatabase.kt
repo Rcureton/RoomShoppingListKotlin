@@ -13,9 +13,10 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
         private var sAppDatabase: AppDatabase? = null
 
-        fun getDatabase(context: Context): AppDatabase? {
-
-            sAppDatabase = Room.databaseBuilder(context, AppDatabase::class.java, "shopping-list").build()
+        @JvmStatic fun getDatabase(context: Context): AppDatabase? {
+            if (sAppDatabase == null) {
+                sAppDatabase = Room.databaseBuilder(context, AppDatabase::class.java, "shopping-list").build()
+            }
             return sAppDatabase
         }
     }
