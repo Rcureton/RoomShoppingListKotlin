@@ -11,7 +11,6 @@ import io.reactivex.Observable
 class ShoppingListViewModel : AndroidViewModel {
 
     constructor(application: Application?): super(application){
-        mDatabase = AppDatabase.getDatabase(this.getApplication())
 
     }
 

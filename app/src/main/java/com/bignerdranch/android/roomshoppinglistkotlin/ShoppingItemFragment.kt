@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bignerdranch.android.roomshoppinglistkotlin.database.ShoppingItems
 import com.bignerdranch.android.roomshoppinglistkotlin.databinding.FragmentShoppingItemBinding
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -49,9 +49,9 @@ class ShoppingItemFragment : LifecycleFragment() {
         }
 
         binding.fragmentShoppingSaveButton.setOnClickListener { v ->
-            val shoppingItem = ShoppingItems(UUID.randomUUID().hashCode(), mDate, mStoreName, mItemTitle)
+            val shoppingItem = ShoppingItems(0, mDate, mStoreName, mItemTitle)
 
-            Observable.fromCallable {
+            Single.fromCallable {
                 ShoppingListApplication.mAppDatabase?.shoppingItemsDao()?.insertItems(shoppingItem)}
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread()).subscribe()

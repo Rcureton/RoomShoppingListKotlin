@@ -21,6 +21,10 @@ android {
     }
 
     dataBinding.enabled = true
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 kapt.generateStubs = true
 
@@ -53,5 +57,9 @@ dependencies {
 //    kapt "android.arch.persistence.room:compiler:${arch_persistence}"
     annotationProcessor "android.arch.persistence.room:compiler:${arch_persistence}"
     kapt 'com.android.databinding:compiler:3.0.0-alpha4'
+
+    //dagger
+    compile "com.google.dagger:dagger:2.9"
+    annotationProcessor "com.google.dagger:dagger-compiler:2.9"
 
 }
